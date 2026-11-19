@@ -1,7 +1,157 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AA-02 scenario starter</title><link rel="stylesheet" href="assets/styles/main.css"></head>
-<body><main><h1>AA-02 scenario starter</h1><p>Bootstrap only. Implement the assigned scenario before submitting.</p>
-<p id="session"></p><button id="health">Check connection</button><button id="catalogue">Load bootstrap catalogue</button><button id="collection">Try collection TODO</button>
-<p id="status" role="status"></p><pre id="output"></pre>
-<section><h2>Scenario workflow TODO</h2><p>Add catalogue details and collection add/edit/remove controls. Retain the returned collection code; display saved entries and server-calculated results after each mutation. Use your scenario's field names, units and limits.</p></section>
-</main><script type="module" src="scripts/index.js"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Club Equipment Transport Planner (S18)</title>
+  <link rel="stylesheet" href="assets/styles/main.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Club Equipment Transport Planner</h1>
+      <p class="subtitle">Scenario S18 — Event equipment transport mass calculation & load planning</p>
+      <div class="session-bar">
+        <p id="session" style="margin: 0;">Session Code: <code id="session-code">Initializing...</code></p>
+        <div>Plan Code: <code id="plan-code">None</code></div>
+        <button id="health" class="btn-outline btn-sm" type="button">Check Connection</button>
+        <span id="health-status"></span>
+      </div>
+    </header>
+
+    <div id="status-container" role="status" aria-live="polite">
+      <p id="status" class="hidden"></p>
+      <div id="error-message" class="alert alert-error hidden">
+        <strong>Error:</strong> <span id="error-text"></span>
+      </div>
+      <div id="success-message" class="alert alert-success hidden">
+        <span id="success-text"></span>
+      </div>
+    </div>
+
+    <div class="layout-grid">
+      <!-- Left Column: Equipment Catalogue & Details -->
+      <section class="card" id="catalogue-section">
+        <h2>Equipment Catalogue</h2>
+        <p class="subtitle">Available club equipment (Read-only)</p>
+        <div id="catalogue-list" class="equipment-grid">
+          <p class="empty-state">Loading catalogue items...</p>
+        </div>
+
+        <div id="equipment-detail" class="detail-box hidden">
+          <h3>Equipment Details</h3>
+          <p><strong>Code:</strong> <span id="detail-code"></span></p>
+          <p><strong>Name:</strong> <span id="detail-name"></span></p>
+          <p><strong>Unit Mass:</strong> <span id="detail-mass"></span> kg</p>
+          <p><strong>Handling Notes:</strong> <span id="detail-notes"></span></p>
+        </div>
+      </section>
+
+      <!-- Right Column: Current Load Plan & Add Form -->
+      <div>
+        <section class="card" id="plan-section">
+          <h2>Current Load Plan</h2>
+          
+          <div class="total-mass-badge">
+            <span>Authoritative Total Mass:</span>
+            <span class="mass-value" id="total-mass">0</span>
+            <span>kg</span>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th>Count</th>
+                  <th>Unit Mass</th>
+                  <th>Line Mass</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="plan-items-body">
+                <tr>
+                  <td colspan="6" class="empty-state">No equipment in load plan yet. Add items below.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card" id="add-item-section">
+          <h2>Add Equipment to Plan</h2>
+          <form id="add-item-form">
+            <div class="form-row">
+              <div class="form-group" style="flex: 2;">
+                <label for="equipment-select">Select Equipment</label>
+                <select id="equipment-select" class="form-control" required>
+                  <option value="" disabled selected>Select an item...</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="flex: 1;">
+                <label for="unit-count-input">Quantity (1 - 15)</label>
+                <input id="unit-count-input" class="form-control" type="number" min="0" max="20" step="1" value="1" required>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <button id="add-btn" type="submit">Add to Plan</button>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <!-- Verification / Evidence Reference -->
+    <details>
+      <summary>API Response Payload & Test Cases Reference</summary>
+      <div style="margin-top: 1rem;">
+        <h4>Last Server Response</h4>
+        <pre id="output">No requests sent yet.</pre>
+
+        <h4>Scenario S18 Evidence Cases (Verification Guide)</h4>
+        <table class="test-cases-table">
+          <thead>
+            <tr>
+              <th>Case</th>
+              <th>Action</th>
+              <th>Expected Server Total</th>
+              <th>Verification Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1. Add Items</td>
+              <td>Add 2 × EQUIP-001 (Chair 4kg) and 1 × EQUIP-002 (Speaker 7kg)</td>
+              <td>15 kg (2×4 + 1×7)</td>
+              <td>Verifies creation, item insertion and line/total calculation</td>
+            </tr>
+            <tr>
+              <td>2. Update Item</td>
+              <td>Change EQUIP-001 to 3 units</td>
+              <td>19 kg (3×4 + 1×7)</td>
+              <td>Verifies item mutation and updated authoritative total</td>
+            </tr>
+            <tr>
+              <td>3. Remove Item</td>
+              <td>Delete EQUIP-002</td>
+              <td>12 kg (3×4)</td>
+              <td>Verifies item removal without deleting catalogue seed</td>
+            </tr>
+            <tr>
+              <td>4. Invalid Edit</td>
+              <td>Attempt to set EQUIP-001 to 0 units</td>
+              <td>Still 12 kg (400 Rejected)</td>
+              <td>Verifies rejection, visible error, and state unchanged</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </main>
+
+  <script type="module" src="scripts/index.js"></script>
+</body>
+</html>
