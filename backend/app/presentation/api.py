@@ -21,8 +21,11 @@ def routes(service: PlannerService):
     def equipment_type(equipment_code: str): return service.equipment_type(equipment_code)
 
     @router.post("/load-plans")
-    def create_plan(session_code: Session): return service.create_plan(session_code)
-
+    def create_plan(session_code: Session, response: Response):
+        body, created = service.create_plan(session_code)
+        response.status_code = 201 if created else 200
+        return body
+    
     @router.get("/load-plans/{plan_code}")
     def read_plan(plan_code: str, session_code: Session): return service.read_plan(plan_code, session_code)
 
