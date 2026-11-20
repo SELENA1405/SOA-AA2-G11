@@ -1,4 +1,6 @@
 """Application adapters implement domain ports and orchestrate infrastructure."""
+import uuid
+
 from app.domain.errors import (
     DuplicateItem, EquipmentNotFound, InvalidRequest, PlanNotFound,
 )
@@ -35,14 +37,17 @@ class LoadPlanAdapter(LoadPlanPort):
     def __init__(self, driver: PostgresData): self.driver = driver
 
     def create_or_get(self, session_code):
-        return self.driver.create_or_get_plan(session_code)["plan_code"]
+        candidate = "PLAN-" + uuid.uuid4().hex[:8].upper()
+        result = self.driver.create_or_get_plan(candidate, session_code)
+        return result["plan_code"], result["created"]
 
     def read(self, plan_code, session_code):
-        rows = self.driver.read_plan(plan_code, session_code)
-        if rows is None:
+        plan = self.driver.get_plan(plan_code, session_code)
+        if plan is None:
             raise PlanNotFound()
-        return [{"equipmentCode": r["equipment_code"], "unitCount": r["unit_count"]} for r in rows]
-
+        return [{"equipmentCode": r["equipment_code"], "unitCount": r["unit_count"]}
+                for r in plan["items"]]
+    
     def add(self, plan_code, session_code, equipment_code, unit_count):
         raise_for_status(self.driver.add_item(plan_code, session_code, equipment_code, unit_count))
 
@@ -79,7 +84,8 @@ class PlannerService:
         return _equipment_view(row)
 
     def create_plan(self, session_code):
-        return {"planCode": self.plans.create_or_get(session_code)}
+        plan_code, created = self.plans.create_or_get(session_code)
+        return {"planCode": plan_code}, created
 
     def read_plan(self, plan_code, session_code):
         saved = self.plans.read(plan_code, session_code)
