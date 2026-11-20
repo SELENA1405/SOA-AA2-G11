@@ -29,9 +29,6 @@ def create_app(service=None):
             status_code=STATUS_BY_CODE.get(exc.error_code, 400),
             content={"error_code": exc.error_code, "message": exc.message},
         )
-    @app.exception_handler(NotImplementedError)  # remove once the stubs are gone (Thursday)
-    async def todo(request: Request, exc):
-        return JSONResponse(status_code=501, content={"error_code": "SCENARIO_TODO", "message": str(exc)})
     @app.exception_handler(RequestValidationError)
     async def invalid(request: Request, exc):
         return JSONResponse(status_code=400, content={"error_code": "INVALID_REQUEST", "message": "Check request fields and X-Session-Code."})
