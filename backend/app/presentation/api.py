@@ -1,33 +1,47 @@
 """HTTP translation only; project dependencies are application-only."""
 from typing import Annotated
-from fastapi import APIRouter, Header, HTTPException
-from app.application.service import StarterService
+from fastapi import APIRouter, Header, HTTPException, Response
+from app.application.service import PlannerService
 
 Session = Annotated[str, Header(alias="X-Session-Code", min_length=1, max_length=128)]
 
-def routes(service: StarterService):
+
+def routes(service: PlannerService):
     router = APIRouter(prefix="/api")
+
     @router.get("/health")
     def health():
         if not service.health(): raise HTTPException(503, "Database unavailable")
-        return {"status": "ok", "database": "connected", "scope": "bootstrap only"}
-    @router.get("/catalogue")
-    def catalogue(): return {"items": service.catalogue(), "scope": "neutral bootstrap data"}
-    @router.get("/catalogue/{item_code}")
-    def detail(item_code: str):
-        item = service.catalogue_item(item_code)
-        if item is None: raise HTTPException(404, "Catalogue item not found")
-        return item
-    # TODO: rename routes/fields and implement scenario request/response models.
-    # Stubs cannot access or mutate any collection; they return explicit 501.
-    @router.post("/collections")
-    def create(session_code: Session): return service.collection_todo()
-    @router.get("/collections/{collection_code}")
-    def read(collection_code: str, session_code: Session): return service.collection_todo()
-    @router.post("/collections/{collection_code}/items")
-    def add(collection_code: str, entry: dict, session_code: Session): return service.collection_todo()
-    @router.put("/collections/{collection_code}/items/{item_code}")
-    def edit(collection_code: str, item_code: str, entry: dict, session_code: Session): return service.collection_todo()
-    @router.delete("/collections/{collection_code}/items/{item_code}")
-    def remove(collection_code: str, item_code: str, session_code: Session): return service.collection_todo()
+        return {"status": "ok", "database": "connected"}
+
+    @router.get("/equipment-types")
+    def equipment_types(): return service.equipment_types()          # plain array
+
+    @router.get("/equipment-types/{equipment_code}")
+    def equipment_type(equipment_code: str): return service.equipment_type(equipment_code)
+
+    @router.post("/load-plans")
+    def create_plan(session_code: Session, response: Response):
+        body, created = service.create_plan(session_code)
+        response.status_code = 201 if created else 200
+        return body
+    
+    @router.get("/load-plans/{plan_code}")
+    def read_plan(plan_code: str, session_code: Session): return service.read_plan(plan_code, session_code)
+
+    @router.post("/load-plans/{plan_code}/items", status_code=201)
+    def add_item(plan_code: str, entry: dict, session_code: Session):
+        service.add_item(plan_code, session_code, entry)
+        return service.read_plan(plan_code, session_code)
+
+    @router.put("/load-plans/{plan_code}/items/{equipment_code}")
+    def edit_item(plan_code: str, equipment_code: str, entry: dict, session_code: Session):
+        service.edit_item(plan_code, session_code, equipment_code, entry)
+        return service.read_plan(plan_code, session_code)
+
+    @router.delete("/load-plans/{plan_code}/items/{equipment_code}", status_code=204, response_class=Response)
+    def remove_item(plan_code: str, equipment_code: str, session_code: Session):
+        service.remove_item(plan_code, session_code, equipment_code)
+        return Response(status_code=204)
+
     return router
