@@ -8,10 +8,9 @@ MAX_UNITS = 15
 
 
 def validate_unit_count(value) -> int:
-    """Single quantity check shared by POST and PUT."""
-    if isinstance(value, bool):          # bool is a subclass of int: reject first
+    if isinstance(value, bool):
         raise InvalidUnitCount()
-    if type(value) is not int:           # rejects 1.5, 2.0, "3", None, lists
+    if type(value) is not int:
         raise InvalidUnitCount()
     if not MIN_UNITS <= value <= MAX_UNITS:
         raise InvalidUnitCount()
@@ -19,34 +18,34 @@ def validate_unit_count(value) -> int:
 
 
 def validate_entry(entry: dict) -> None:
-    """Used for POST and PUT bodies. Only unitCount is checked here;
-    equipmentCode existence is checked by the service against the catalogue."""
-    if not isinstance(entry, dict):
+    """Shared by POST and PUT. Missing unitCount is a format error, not a bad quantity."""
+    if not isinstance(entry, dict) or "unitCount" not in entry:
         raise InvalidRequest()
-    validate_unit_count(entry.get("unitCount"))
+    validate_unit_count(entry["unitCount"])
 
 
-def _to_number(value: Decimal) -> int | float:
+def to_number(value) -> int | float:
     """Whole numbers come back as int (JSON 4, not "4.00" or 4.0)."""
+    value = Decimal(str(value))
     return int(value) if value == value.to_integral_value() else float(value)
 
 
 def calculate_result(saved_entries: list[dict], stored_catalogue: list[dict]) -> dict:
-    """saved_entries: [{"equipmentCode", "unitCount"}] (saved items only)
-    stored_catalogue: [{"equipment_code", "unit_mass_kg", ...}] from the database."""
-    masses = {row["equipment_code"]: Decimal(str(row["unit_mass_kg"])) for row in stored_catalogue}
+    """saved_entries: [{"equipmentCode", "unitCount"}]; stored_catalogue: database rows."""
+    catalogue = {row["equipment_code"]: row for row in stored_catalogue}
     lines, total = [], Decimal(0)
     for entry in saved_entries:
-        code = entry["equipmentCode"]
-        if code not in masses:
+        row = catalogue.get(entry["equipmentCode"])
+        if row is None:
             raise EquipmentNotFound()
-        unit_mass = masses[code]
+        unit_mass = Decimal(str(row["unit_mass_kg"]))
         line_mass = Decimal(entry["unitCount"]) * unit_mass
         total += line_mass
         lines.append({
-            "equipmentCode": code,
+            "equipmentCode": entry["equipmentCode"],
+            "name": row["name"],
             "unitCount": entry["unitCount"],
-            "unitMassKg": _to_number(unit_mass),
-            "lineMassKg": _to_number(line_mass),
+            "unitMassKg": to_number(unit_mass),
+            "lineMassKg": to_number(line_mass),
         })
-    return {"items": lines, "totalMassKg": _to_number(total)}
+    return {"items": lines, "totalMassKg": to_number(total)}
