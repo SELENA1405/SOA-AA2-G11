@@ -2,15 +2,15 @@ assessment:
   id: "additional-assessment-02"
   title: "Integration, Containerisation, and Testing Readiness Demonstration"
 group:
-  id: "GroupID: 11"
+  id: "11"
   members:
-    - student_id: "StudentID-1: 6704860005"
+    - student_id: "6704860005"
       name: "San Ja Nar"
       contribution_summary: "Database schema, seed data and PostgreSQL persistence layer (postgres.py); Dockerfile fix and environment settings; repository set-up, pull-request merging, integration testing and evidence."
-    - student_id: "StudentID-2: 6704860015"
+    - student_id: "6704860015"
       name: "Kaung Nyein Lwin"
       contribution_summary: "Backend domain, service and API layers (errors, scenario validation and total calculation, ports, service, api, main); unit tests; adapter and 201/200 response fixes."
-    - student_id: "StudentID-3: 6704860023"
+    - student_id: "6704860023"
       name: "Aung Kyaw Thu Phyo"
       contribution_summary: "Frontend equipment catalogue and details, load-plan add, edit and remove controls, server-calculated total display, visible error handling and the request queue."
 project:
