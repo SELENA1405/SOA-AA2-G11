@@ -1,0 +1,6 @@
+ equipment_code |       name       | unit_mass_kg |               handling_notes               
+----------------+------------------+--------------+--------------------------------------------
+ EQUIP-001      | Foldable Chair   |         4.00 | Carry folded; keep fingers clear of hinges
+ EQUIP-002      | Portable Speaker |         7.00 | Keep dry; secure during transportation
+(2 rows)
+

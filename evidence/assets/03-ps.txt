@@ -1,0 +1,4 @@
+NAME                IMAGE                 COMMAND                  SERVICE    CREATED         STATUS                   PORTS
+config-backend-1    config-backend        "uvicorn app.main:ap…"   backend    2 minutes ago   Up 2 minutes             0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+config-database-1   postgres:18           "docker-entrypoint.s…"   database   2 minutes ago   Up 2 minutes (healthy)   5432/tcp
+config-frontend-1   nginx:stable-alpine   "/docker-entrypoint.…"   frontend   2 minutes ago   Up 2 minutes             0.0.0.0:8080->80/tcp, [::]:8080->80/tcp

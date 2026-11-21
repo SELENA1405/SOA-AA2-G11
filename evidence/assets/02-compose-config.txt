@@ -1,0 +1,79 @@
+name: config
+services:
+  backend:
+    build:
+      context: /Users/selena/The Selena/University/Year 3 S 1/SOA/Assessment2/SOA-AA2-G11
+      dockerfile: config/Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
+        required: true
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@database:5432/scenario_starter
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8000
+        published: "8000"
+        protocol: tcp
+  database:
+    environment:
+      POSTGRES_DB: scenario_starter
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}
+      timeout: 3s
+      interval: 3s
+      retries: 20
+    image: postgres:18
+    networks:
+      default: null
+    volumes:
+      - type: volume
+        source: scenario-data
+        target: /var/lib/postgresql
+        volume: {}
+      - type: bind
+        source: /Users/selena/The Selena/University/Year 3 S 1/SOA/Assessment2/SOA-AA2-G11/database/001-schema.sql
+        target: /docker-entrypoint-initdb.d/001-schema.sql
+        read_only: true
+        bind: {}
+      - type: bind
+        source: /Users/selena/The Selena/University/Year 3 S 1/SOA/Assessment2/SOA-AA2-G11/database/002-seed.sql
+        target: /docker-entrypoint-initdb.d/002-seed.sql
+        read_only: true
+        bind: {}
+  frontend:
+    depends_on:
+      backend:
+        condition: service_started
+        required: true
+    image: nginx:stable-alpine
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8080"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /Users/selena/The Selena/University/Year 3 S 1/SOA/Assessment2/SOA-AA2-G11/frontend
+        target: /usr/share/nginx/html
+        read_only: true
+        bind: {}
+      - type: bind
+        source: /Users/selena/The Selena/University/Year 3 S 1/SOA/Assessment2/SOA-AA2-G11/config/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+        bind: {}
+networks:
+  default:
+    name: config_default
+volumes:
+  scenario-data:
+    name: config_scenario-data
