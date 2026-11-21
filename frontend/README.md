@@ -1,4 +1,4 @@
 # Frontend
-Nginx serves this directory using `config/nginx.conf`; `/api/` is proxied to the backend service. Open the root README for startup. The existing HTTP helper and serial request queue are retained in neutral form. Session codes live for one page load; reload persistence is outside the scenarios.
+Nginx serves this directory using `config/nginx.conf`; `/api/` is proxied to the backend service.
 
-TODO: replace bootstrap controls with the assigned catalogue/details and collection workflow. Keep requests ordered, handle errors visibly, and render server-returned saved state/results. Do not calculate authoritative totals in JavaScript.
+The page shows the equipment catalogue and details, the current load plan with the server-calculated total mass, and controls to add, update and remove items. Requests go through a serial action queue so they run in order, errors are shown on the page, and the page never calculates the total itself. The session code lives for one page load.
