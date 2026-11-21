@@ -11,7 +11,7 @@ services:
       context: ..
       dockerfile: config/Dockerfile
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@database:5432/scenario_starter
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-scenario_starter}
     ports: ["8000:8000"]
     depends_on:
       database:
@@ -19,11 +19,11 @@ services:
   database:
     image: postgres:18
     environment:
-      POSTGRES_DB: scenario_starter
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-scenario_starter}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d scenario_starter"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 3s
       timeout: 3s
       retries: 20
