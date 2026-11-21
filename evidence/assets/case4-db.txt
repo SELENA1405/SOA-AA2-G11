@@ -1,0 +1,5 @@
+   plan_code   | equipment_code | unit_count 
+---------------+----------------+------------
+ PLAN-4396CD47 | EQUIP-001      |          3
+(1 row)
+

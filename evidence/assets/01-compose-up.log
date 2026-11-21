@@ -1,0 +1,73 @@
+ Image config-backend Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 609B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 283B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.14-slim
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [1/5] FROM docker.io/library/python:3.14-slim@sha256:930e1abba7c4e8f96ed93e8012c35d174d7732752731bbd5e8e757d7ec6f3966
+#5 resolve docker.io/library/python:3.14-slim@sha256:930e1abba7c4e8f96ed93e8012c35d174d7732752731bbd5e8e757d7ec6f3966 done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 968B done
+#6 DONE 0.0s
+
+#7 [4/5] COPY backend/app ./app
+#7 CACHED
+
+#8 [2/5] WORKDIR /backend
+#8 CACHED
+
+#9 [3/5] COPY backend/pyproject.toml ./
+#9 CACHED
+
+#10 [5/5] RUN python -m pip install --no-cache-dir . typing-extensions
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:486afb2ab771ab38250b0e70c6d2a883c255fccf9565860f55298581fb874168 done
+#11 exporting config sha256:7835305ef0b6f5619734dd991aa9613af7d03cbfd2b4924c40f9a0f79a94d67a done
+#11 exporting attestation manifest sha256:73f2ced0e00977a415e333443580508cf74b27cbbb67b4def724a085a2676558 done
+#11 exporting manifest list sha256:432af89bf88be5b216658a34d1c959c2cedecbe6929ab0c2f036a2ce5c67049b done
+#11 naming to docker.io/library/config-backend:latest done
+#11 unpacking to docker.io/library/config-backend:latest done
+#11 DONE 0.0s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ Image config-backend Built 
+ Network config_default Creating 
+ Network config_default Created 
+ Volume config_scenario-data Creating 
+ Volume config_scenario-data Created 
+ Container config-database-1 Creating 
+ Container config-database-1 Created 
+ Container config-backend-1 Creating 
+ Container config-backend-1 Created 
+ Container config-frontend-1 Creating 
+ Container config-frontend-1 Created 
+ Container config-database-1 Starting 
+ Container config-database-1 Started 
+ Container config-database-1 Waiting 
+ Container config-database-1 Healthy 
+ Container config-backend-1 Starting 
+ Container config-backend-1 Started 
+ Container config-frontend-1 Starting 
+ Container config-frontend-1 Started 
+ Container config-frontend-1 Waiting 
+ Container config-backend-1 Waiting 
+ Container config-database-1 Waiting 
+ Container config-backend-1 Healthy 
+ Container config-database-1 Healthy 
+ Container config-frontend-1 Healthy 

@@ -1,0 +1,163 @@
+backend-1  | INFO:     Started server process [1]
+backend-1   | INFO:     Waiting for application startup.
+backend-1   | INFO:     Application startup complete.
+backend-1   | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+backend-1   | INFO:     172.23.0.4:59384 - "GET /api/health HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.1:46370 - "GET /api/health HTTP/1.1" 200 OK
+database-1  | The files belonging to this database system will be owned by user "postgres".
+database-1  | This user must also own the server process.
+database-1  | 
+database-1  | The database cluster will be initialized with locale "en_US.utf8".
+database-1  | The default database encoding has accordingly been set to "UTF8".
+database-1  | The default text search configuration will be set to "english".
+database-1  | 
+database-1  | Data page checksums are enabled.
+database-1  | 
+database-1  | fixing permissions on existing directory /var/lib/postgresql/18/docker ... ok
+database-1  | creating subdirectories ... ok
+database-1  | selecting dynamic shared memory implementation ... posix
+database-1  | selecting default "max_connections" ... 100
+database-1  | selecting default "shared_buffers" ... 128MB
+database-1  | selecting default time zone ... Etc/UTC
+database-1  | creating configuration files ... ok
+database-1  | running bootstrap script ... ok
+database-1  | performing post-bootstrap initialization ... ok
+database-1  | syncing data to disk ... ok
+database-1  | initdb: warning: enabling "trust" authentication for local connections
+database-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+database-1  | 
+database-1  | 
+database-1  | Success. You can now start the database server using:
+database-1  | 
+database-1  |     pg_ctl -D /var/lib/postgresql/18/docker -l logfile start
+database-1  | 
+database-1  | waiting for server to start....2026-11-21 13:30:18.626 UTC [52] LOG:  starting PostgreSQL 18.7 (Debian 18.7-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+database-1  | 2026-11-21 13:30:18.627 UTC [52] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+database-1  | 2026-11-21 13:30:18.630 UTC [58] LOG:  database system was shut down at 2026-11-21 13:30:18 UTC
+database-1  | 2026-11-21 13:30:18.632 UTC [52] LOG:  database system is ready to accept connections
+database-1  |  done
+database-1  | server started
+database-1  | CREATE DATABASE
+database-1  | 
+database-1  | 
+database-1  | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/001-schema.sql
+database-1  | CREATE TABLE
+database-1  | CREATE TABLE
+database-1  | CREATE TABLE
+database-1  | 
+database-1  | 
+database-1  | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/002-seed.sql
+database-1  | INSERT 0 2
+database-1  | 
+database-1  | 
+backend-1   | INFO:     172.23.0.4:41134 - "GET /api/equipment-types HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:41144 - "POST /api/load-plans HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:41152 - "GET /api/load-plans/PLAN-1ED8E07A HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:41164 - "GET /api/equipment-types HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:41174 - "POST /api/load-plans HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:41186 - "GET /api/load-plans/PLAN-DDC632B9 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:55750 - "GET /api/equipment-types HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:55758 - "POST /api/load-plans HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:55772 - "GET /api/load-plans/PLAN-B7B67AD8 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:47490 - "GET /api/equipment-types HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:47498 - "POST /api/load-plans HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:47514 - "GET /api/load-plans/PLAN-3A9C7C91 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:47526 - "GET /api/equipment-types HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:47532 - "POST /api/load-plans HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:47540 - "GET /api/load-plans/PLAN-A1A83E54 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:47548 - "GET /api/equipment-types HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:47554 - "POST /api/load-plans HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:47560 - "GET /api/load-plans/PLAN-67929456 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:52752 - "GET /api/equipment-types HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:52758 - "POST /api/load-plans HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:43336 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+database-1  | 2026-11-21 13:30:18.850 UTC [52] LOG:  received fast shutdown request
+database-1  | waiting for server to shut down....2026-11-21 13:30:18.850 UTC [52] LOG:  aborting any active transactions
+database-1  | 2026-11-21 13:30:18.851 UTC [52] LOG:  background worker "logical replication launcher" (PID 61) exited with exit code 1
+database-1  | 2026-11-21 13:30:18.852 UTC [56] LOG:  shutting down
+database-1  | 2026-11-21 13:30:18.852 UTC [56] LOG:  checkpoint starting: shutdown immediate
+database-1  | 2026-11-21 13:30:18.884 UTC [56] LOG:  checkpoint complete: wrote 961 buffers (5.9%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.019 s, sync=0.013 s, total=0.033 s; sync files=316, longest=0.003 s, average=0.001 s; distance=4494 kB, estimate=4494 kB; lsn=0/1BD7730, redo lsn=0/1BD7730
+database-1  | 2026-11-21 13:30:18.889 UTC [52] LOG:  database system is shut down
+database-1  |  done
+database-1  | server stopped
+database-1  | 
+database-1  | PostgreSQL init process complete; ready for start up.
+database-1  | 
+database-1  | 2026-11-21 13:30:18.982 UTC [1] LOG:  starting PostgreSQL 18.7 (Debian 18.7-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+database-1  | 2026-11-21 13:30:18.983 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+database-1  | 2026-11-21 13:30:18.983 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+database-1  | 2026-11-21 13:30:18.984 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+database-1  | 2026-11-21 13:30:18.987 UTC [78] LOG:  database system was shut down at 2026-11-21 13:30:18 UTC
+database-1  | 2026-11-21 13:30:18.988 UTC [1] LOG:  database system is ready to accept connections
+database-1  | 2026-11-21 13:35:19.056 UTC [76] LOG:  checkpoint starting: time
+database-1  | 2026-11-21 13:35:23.891 UTC [76] LOG:  checkpoint complete: wrote 46 buffers (0.3%), wrote 3 SLRU buffers; 1 WAL file(s) added, 0 removed, 0 recycled; write=4.774 s, sync=0.006 s, total=4.836 s; sync files=14, longest=0.004 s, average=0.001 s; distance=350 kB, estimate=350 kB; lsn=0/1C2F028, redo lsn=0/1C2EFD0
+database-1  | 2026-11-21 13:40:19.995 UTC [76] LOG:  checkpoint starting: time
+database-1  | 2026-11-21 13:40:20.945 UTC [76] LOG:  checkpoint complete: wrote 9 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.939 s, sync=0.004 s, total=0.951 s; sync files=8, longest=0.003 s, average=0.001 s; distance=16 kB, estimate=316 kB; lsn=0/1C33530, redo lsn=0/1C33228
+database-1  | 2026-11-21 13:45:20.046 UTC [76] LOG:  checkpoint starting: time
+database-1  | 2026-11-21 13:45:20.367 UTC [76] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.311 s, sync=0.004 s, total=0.321 s; sync files=4, longest=0.003 s, average=0.001 s; distance=2 kB, estimate=285 kB; lsn=0/1C33DD8, redo lsn=0/1C33D80
+backend-1   | INFO:     172.23.0.4:41752 - "GET /api/health HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:54588 - "POST /api/load-plans/PLAN-4396CD47/items HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:54604 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:54616 - "POST /api/load-plans/PLAN-4396CD47/items HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:54628 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:39744 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:46004 - "PUT /api/load-plans/PLAN-4396CD47/items/EQUIP-001 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:46018 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:50138 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:37334 - "DELETE /api/load-plans/PLAN-4396CD47/items/EQUIP-002 HTTP/1.1" 204 No Content
+backend-1   | INFO:     172.23.0.4:37342 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:60266 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+database-1  | 2026-11-21 13:55:20.537 UTC [76] LOG:  checkpoint starting: time
+database-1  | 2026-11-21 13:55:21.059 UTC [76] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.510 s, sync=0.004 s, total=0.522 s; sync files=5, longest=0.004 s, average=0.001 s; distance=2 kB, estimate=257 kB; lsn=0/1C34600, redo lsn=0/1C345A8
+backend-1   | INFO:     172.23.0.4:48342 - "PUT /api/load-plans/PLAN-4396CD47/items/EQUIP-001 HTTP/1.1" 400 Bad Request
+backend-1   | INFO:     172.23.0.4:48348 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:59336 - "GET /api/load-plans/PLAN-4396CD47 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:34666 - "GET /api/equipment-types HTTP/1.1" 200 OK
+database-1  | 2026-11-21 14:00:20.155 UTC [76] LOG:  checkpoint starting: time
+database-1  | 2026-11-21 14:00:20.269 UTC [76] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.105 s, sync=0.003 s, total=0.115 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=231 kB; lsn=0/1C34878, redo lsn=0/1C34820
+database-1  | 2026-11-21 14:05:20.347 UTC [76] LOG:  checkpoint starting: time
+backend-1   | INFO:     172.23.0.4:34674 - "GET /api/equipment-types/EQUIP-001 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:34684 - "GET /api/equipment-types/EQUIP-999 HTTP/1.1" 404 Not Found
+backend-1   | INFO:     172.23.0.4:36464 - "POST /api/load-plans HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:36472 - "POST /api/load-plans HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:36480 - "POST /api/load-plans HTTP/1.1" 400 Bad Request
+backend-1   | INFO:     172.23.0.4:52608 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:52612 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 201 Created
+backend-1   | INFO:     172.23.0.4:52614 - "GET /api/load-plans/PLAN-FC5B1C79 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:52622 - "PUT /api/load-plans/PLAN-FC5B1C79/items/EQUIP-001 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:52628 - "GET /api/load-plans/PLAN-FC5B1C79 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:52636 - "DELETE /api/load-plans/PLAN-FC5B1C79/items/EQUIP-002 HTTP/1.1" 204 No Content
+backend-1   | INFO:     172.23.0.4:52638 - "GET /api/load-plans/PLAN-FC5B1C79 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:52654 - "PUT /api/load-plans/PLAN-FC5B1C79/items/EQUIP-001 HTTP/1.1" 400 Bad Request
+backend-1   | INFO:     172.23.0.4:52660 - "GET /api/load-plans/PLAN-FC5B1C79 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:53400 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 400 Bad Request
+backend-1   | INFO:     172.23.0.4:53410 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 400 Bad Request
+backend-1   | INFO:     172.23.0.4:53420 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 400 Bad Request
+backend-1   | INFO:     172.23.0.4:53424 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 400 Bad Request
+backend-1   | INFO:     172.23.0.4:53428 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 400 Bad Request
+backend-1   | INFO:     172.23.0.4:53434 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 400 Bad Request
+backend-1   | INFO:     172.23.0.4:53438 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 409 Conflict
+backend-1   | INFO:     172.23.0.4:53444 - "POST /api/load-plans/PLAN-FC5B1C79/items HTTP/1.1" 404 Not Found
+database-1  | 2026-11-21 14:05:20.467 UTC [76] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.109 s, sync=0.002 s, total=0.120 s; sync files=2, longest=0.002 s, average=0.001 s; distance=0 kB, estimate=208 kB; lsn=0/1C34AE8, redo lsn=0/1C34A90
+database-1  | 2026-11-21 14:41:33.098 UTC [76] LOG:  checkpoint starting: time
+database-1  | 2026-11-21 14:41:33.731 UTC [76] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.621 s, sync=0.004 s, total=0.635 s; sync files=7, longest=0.004 s, average=0.001 s; distance=3 kB, estimate=187 kB; lsn=0/1C35900, redo lsn=0/1C358A8
+database-1  | 2026-11-21 14:46:33.833 UTC [76] LOG:  checkpoint starting: time
+database-1  | 2026-11-21 14:46:33.947 UTC [76] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 0 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.103 s, sync=0.003 s, total=0.114 s; sync files=1, longest=0.003 s, average=0.003 s; distance=0 kB, estimate=169 kB; lsn=0/1C35B30, redo lsn=0/1C35AD8
+backend-1   | INFO:     172.23.0.4:53456 - "PUT /api/load-plans/PLAN-FC5B1C79/items/EQUIP-002 HTTP/1.1" 404 Not Found
+backend-1   | INFO:     172.23.0.4:53466 - "DELETE /api/load-plans/PLAN-FC5B1C79/items/EQUIP-002 HTTP/1.1" 404 Not Found
+backend-1   | INFO:     172.23.0.4:53482 - "GET /api/load-plans/PLAN-DOES-NOT-EXIST HTTP/1.1" 404 Not Found
+backend-1   | INFO:     172.23.0.4:53484 - "GET /api/load-plans/PLAN-FC5B1C79 HTTP/1.1" 404 Not Found
+backend-1   | INFO:     172.23.0.4:53498 - "GET /api/load-plans/PLAN-FC5B1C79 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:60740 - "GET /api/health HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.1:56488 - "GET /api/health HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.1:56488 - "GET /api/equipment-types HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:43788 - "GET /api/equipment-types HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:43802 - "GET /api/equipment-types/EQUIP-001 HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.4:43806 - "GET /api/equipment-types/EQUIP-999 HTTP/1.1" 404 Not Found
+backend-1   | INFO:     172.23.0.1:34644 - "GET /api/docs HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.1:34642 - "GET /api/docs HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.1:57026 - "GET /api/openapi.json HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.1:58264 - "GET /api/docs HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.1:58264 - "GET /api/openapi.json HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.1:58268 - "GET /api/docs HTTP/1.1" 200 OK
+backend-1   | INFO:     172.23.0.1:58268 - "GET /api/openapi.json HTTP/1.1" 200 OK
