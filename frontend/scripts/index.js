@@ -1,45 +1,6 @@
 import { request } from './http.js';
 import { createActionQueue } from './action-queue.js';
 
-// Phase 1 agreed mock data (used when backend endpoints return 404 before branch merge)
-const PHASE1_CATALOGUE = [
-  {
-    equipmentCode: 'EQUIP-001',
-    name: 'Foldable Chair',
-    unitMassKg: 4,
-    handlingNotes: 'Carry folded; keep fingers clear of hinges'
-  },
-  {
-    equipmentCode: 'EQUIP-002',
-    name: 'Portable Speaker',
-    unitMassKg: 7,
-    handlingNotes: 'Keep dry; secure during transportation'
-  }
-];
-
-let mockPlan = {
-  planCode: 'PLAN-DEMO-001',
-  items: [
-    {
-      equipmentCode: 'EQUIP-001',
-      name: 'Foldable Chair',
-      unitCount: 2,
-      unitMassKg: 4,
-      lineMassKg: 8
-    },
-    {
-      equipmentCode: 'EQUIP-002',
-      name: 'Portable Speaker',
-      unitCount: 1,
-      unitMassKg: 7,
-      lineMassKg: 7
-    }
-  ],
-  totalMassKg: 15
-};
-
-let isPreviewMode = false;
-
 // Anonymous mock session identifier created once per application lifecycle
 const sessionCode = crypto.randomUUID();
 let planCode = null;
@@ -131,19 +92,7 @@ async function checkHealth() {
 async function loadCatalogue() {
   try {
     catalogueListEl.innerHTML = '<p class="empty-state">Loading equipment catalogue...</p>';
-    let items;
-    try {
-      items = await request('/equipment-types');
-    } catch (err) {
-      if (err.status === 404) {
-        // Backend S18 routes not yet merged by teammate; fallback to agreed Phase 1 seeds
-        isPreviewMode = true;
-        items = PHASE1_CATALOGUE;
-        showSuccess('Backend routes pending merge (404). Displaying agreed Phase 1 catalogue in preview mode.');
-      } else {
-        throw err;
-      }
-    }
+    const items = await request('/equipment-types');
 
     catalogueCache = items || [];
 
@@ -189,16 +138,7 @@ async function loadEquipmentDetail(equipmentCode, cardElement) {
     document.querySelectorAll('.equipment-item').forEach(el => el.classList.remove('selected'));
     if (cardElement) cardElement.classList.add('selected');
 
-    let item;
-    try {
-      item = await request(`/equipment-types/${equipmentCode}`);
-    } catch (err) {
-      if (err.status === 404) {
-        item = catalogueCache.find(e => e.equipmentCode === equipmentCode);
-      } else {
-        throw err;
-      }
-    }
+    const item = await request(`/equipment-types/${equipmentCode}`);
 
     if (!item) return;
 
@@ -219,22 +159,11 @@ async function loadEquipmentDetail(equipmentCode, cardElement) {
 /** Initialise or retrieve the session's load plan */
 async function initLoadPlan() {
   try {
-    let res;
-    try {
-      res = await enqueue(() => request('/load-plans', {
-        method: 'POST',
-        session: sessionCode
-      }));
-      planCode = res?.planCode;
-    } catch (err) {
-      if (err.status === 404) {
-        // Fallback to Phase 1 example plan code
-        planCode = mockPlan.planCode;
-        res = { planCode, status: 'preview_mode' };
-      } else {
-        throw err;
-      }
-    }
+    const res = await enqueue(() => request('/load-plans', {
+      method: 'POST',
+      session: sessionCode
+    }));
+    planCode = res?.planCode;
 
     planCodeEl.textContent = planCode || 'Unknown';
     outputEl.textContent = JSON.stringify(res, null, 2);
@@ -249,16 +178,7 @@ async function initLoadPlan() {
 async function fetchAndRenderPlan() {
   if (!planCode) return;
   try {
-    let plan;
-    try {
-      plan = await request(`/load-plans/${planCode}`, { session: sessionCode });
-    } catch (err) {
-      if (err.status === 404) {
-        plan = mockPlan;
-      } else {
-        throw err;
-      }
-    }
+    const plan = await request(`/load-plans/${planCode}`, { session: sessionCode });
 
     outputEl.textContent = JSON.stringify(plan, null, 2);
 
@@ -277,7 +197,7 @@ async function fetchAndRenderPlan() {
 
     planItemsBodyEl.innerHTML = '';
     items.forEach(item => {
-      const lineMass = item.lineMassKg !== undefined ? item.lineMassKg : (item.unitCount * item.unitMassKg);
+      const lineMass = item.lineMassKg; // calculated by the server
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><code>${item.equipmentCode}</code></td>
@@ -340,44 +260,13 @@ async function handleAddItem(e) {
   addBtn.disabled = true;
   try {
     await enqueue(async () => {
-      try {
-        const result = await request(`/load-plans/${planCode}/items`, {
-          method: 'POST',
-          session: sessionCode,
-          body: { equipmentCode, unitCount }
-        });
-        showSuccess(`Added ${equipmentCode} (${unitCount} units) to load plan.`);
-        outputEl.textContent = JSON.stringify(result, null, 2);
-      } catch (err) {
-        if (err.status === 404 && isPreviewMode) {
-          // Preview mutation handling
-          const existing = mockPlan.items.find(i => i.equipmentCode === equipmentCode);
-          if (existing) {
-            const dupErr = new Error('Equipment already in load plan.');
-            dupErr.code = 'DUPLICATE_ITEM';
-            dupErr.status = 409;
-            throw dupErr;
-          }
-          if (isNaN(unitCount) || unitCount < 1 || unitCount > 15 || !Number.isInteger(unitCount)) {
-            const valErr = new Error('unitCount must be a whole number from 1 to 15.');
-            valErr.code = 'INVALID_UNIT_COUNT';
-            valErr.status = 400;
-            throw valErr;
-          }
-          const cat = catalogueCache.find(c => c.equipmentCode === equipmentCode);
-          mockPlan.items.push({
-            equipmentCode,
-            name: cat?.name || equipmentCode,
-            unitCount,
-            unitMassKg: cat?.unitMassKg || 0,
-            lineMassKg: unitCount * (cat?.unitMassKg || 0)
-          });
-          mockPlan.totalMassKg = mockPlan.items.reduce((sum, i) => sum + i.lineMassKg, 0);
-          showSuccess(`[Preview] Added ${equipmentCode} (${unitCount} units).`);
-        } else {
-          throw err;
-        }
-      }
+      const result = await request(`/load-plans/${planCode}/items`, {
+        method: 'POST',
+        session: sessionCode,
+        body: { equipmentCode, unitCount }
+      });
+      showSuccess(`Added ${equipmentCode} (${unitCount} units) to load plan.`);
+      outputEl.textContent = JSON.stringify(result, null, 2);
       await fetchAndRenderPlan();
     });
   } catch (err) {
@@ -394,34 +283,13 @@ async function handleUpdateItem(equipmentCode, unitCount, button) {
 
   try {
     await enqueue(async () => {
-      try {
-        const result = await request(`/load-plans/${planCode}/items/${equipmentCode}`, {
-          method: 'PUT',
-          session: sessionCode,
-          body: { unitCount }
-        });
-        showSuccess(`Updated ${equipmentCode} quantity to ${unitCount}.`);
-        outputEl.textContent = JSON.stringify(result, null, 2);
-      } catch (err) {
-        if (err.status === 404 && isPreviewMode) {
-          // Preview validation check
-          if (isNaN(unitCount) || unitCount < 1 || unitCount > 15 || !Number.isInteger(unitCount)) {
-            const valErr = new Error('unitCount must be a whole number from 1 to 15.');
-            valErr.code = 'INVALID_UNIT_COUNT';
-            valErr.status = 400;
-            throw valErr;
-          }
-          const item = mockPlan.items.find(i => i.equipmentCode === equipmentCode);
-          if (item) {
-            item.unitCount = unitCount;
-            item.lineMassKg = item.unitCount * item.unitMassKg;
-            mockPlan.totalMassKg = mockPlan.items.reduce((sum, i) => sum + i.lineMassKg, 0);
-          }
-          showSuccess(`[Preview] Updated ${equipmentCode} quantity to ${unitCount}.`);
-        } else {
-          throw err;
-        }
-      }
+      const result = await request(`/load-plans/${planCode}/items/${equipmentCode}`, {
+        method: 'PUT',
+        session: sessionCode,
+        body: { unitCount }
+      });
+      showSuccess(`Updated ${equipmentCode} quantity to ${unitCount}.`);
+      outputEl.textContent = JSON.stringify(result, null, 2);
       await fetchAndRenderPlan();
     });
   } catch (err) {
@@ -440,21 +308,11 @@ async function handleRemoveItem(equipmentCode, button) {
 
   try {
     await enqueue(async () => {
-      try {
-        await request(`/load-plans/${planCode}/items/${equipmentCode}`, {
-          method: 'DELETE',
-          session: sessionCode
-        });
-        showSuccess(`Removed ${equipmentCode} from load plan.`);
-      } catch (err) {
-        if (err.status === 404 && isPreviewMode) {
-          mockPlan.items = mockPlan.items.filter(i => i.equipmentCode !== equipmentCode);
-          mockPlan.totalMassKg = mockPlan.items.reduce((sum, i) => sum + i.lineMassKg, 0);
-          showSuccess(`[Preview] Removed ${equipmentCode} from load plan.`);
-        } else {
-          throw err;
-        }
-      }
+      await request(`/load-plans/${planCode}/items/${equipmentCode}`, {
+        method: 'DELETE',
+        session: sessionCode
+      });
+      showSuccess(`Removed ${equipmentCode} from load plan.`);
       await fetchAndRenderPlan();
     });
   } catch (err) {
