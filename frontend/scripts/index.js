@@ -48,7 +48,10 @@ function showError(error) {
     statusP.classList.remove('hidden');
   }
   if (outputEl) {
-    outputEl.textContent = JSON.stringify({ error: message, code: error.code, status: error.status }, null, 2);
+    outputEl.textContent = JSON.stringify(
+      { status: error.status, error_code: error.code, message: error.serverMessage || error.message },
+      null, 2
+    );
   }
 }
 

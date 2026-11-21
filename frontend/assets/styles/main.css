@@ -328,8 +328,4 @@ details summary {
   color: var(--text-muted);
 }
 
-.test-cases-table {
-  width: 100%;
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-}
+

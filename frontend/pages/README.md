@@ -1,2 +1,2 @@
 # Optional pages
-TODO: add scenario pages only if needed; the bootstrap uses index.html.
+No extra pages. The app uses index.html.
