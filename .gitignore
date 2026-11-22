@@ -1,4 +1,7 @@
-google_doc.txt
-frontend/AI_USE_LOG.md
-*AI_USE_LOG*
-*ai_use_log*
+.DS_Store
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+node_modules/
+config/.env
