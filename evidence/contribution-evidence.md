@@ -47,19 +47,29 @@ Commit history from GitHub, by date: [17 Nov (skeleton)](assets/git-history-1-no
 
 **Sources and libraries:** course starter `lesson-11_starter-code`, the assessment brief and scenario file `aa-02-s18.md`; FastAPI, psycopg 3, PostgreSQL 18, Nginx, Docker Compose, Postman, pytest, Chrome DevTools.
 
-**AI use.** Claude (Anthropic) was used as a study and coding assistant. Each entry records the tool, purpose, what was used, and how it was checked. All AI output was reviewed and tested by the member before it was committed. The three evidence files (`integration-evidence.md`, `testing-debugging-evidence.md` and this file) were drafted with Claude from the group's real screenshots, logs, commit history and the members' own issue records, then checked and edited by San Ja Nar. The screenshots, logs and test runs themselves were produced by the group from the running system.
+**AI use.** Each member lists below the tool used, the date, what it was used for, the related commits and how the output was checked. The dates follow the commits. The three evidence files and the README were drafted with Claude from the group's real screenshots, logs, commit history and the members' own issue records, then checked and edited by San Ja Nar. The screenshots, logs and test runs themselves come from the running system.
 
-San Ja Nar:
+San Ja Nar (tool: Claude, claude.ai chat):
 
-| Date | Task | AI output | How it was checked |
+| Date | Task | Commits | How it was checked |
 |---|---|---|---|
-| 17 Nov | Scenario choice, work split, review of the Phase 1 agreement | Suggested corrections and a task breakdown | Kept what matched the brief and the starter |
-| 18 Nov | Database schema, seed data and `postgres.py` | Draft SQL and Python | Loaded into PostgreSQL in Docker and checked with `\dt`, `SELECT` and constraint tests |
-| 18 Nov | Diagnosing the 502 error and the Dockerfile fix | Explanation of the missing module and the one-line fix | Applied only in `config/Dockerfile`, confirmed by a rebuild and the health checks |
-| 20 to 21 Nov | Review of teammates' code, a test script, a Postman collection, and the edited `frontend/scripts/index.js` without the mock fallback | Review notes, draft files and the edited script | The edited script was pasted into the frontend, tested in the browser and committed (`b972bfe`); the collection was run in Postman against the Docker stack |
-| 21 Nov | Environment-variable settings and the three evidence files | Draft config files and draft text | Config files checked with `docker compose config` and a clean start-up; evidence text checked against the screenshots, logs and commits |
+| Tue 17 Nov | Scenario choice, work split and review of the Phase 1 agreement | none (planning) | Kept only what matched the brief and the starter |
+| Wed 18 Nov | Database schema, seed data and `postgres.py` | `a08fba3`, `92ec48a`, `dc82482` | Loaded into PostgreSQL in Docker and checked with `\dt`, `SELECT` and constraint tests |
+| Wed 18 Nov | Diagnosing the 502 error and the Dockerfile fix | `315e0eb` | Applied only in `config/Dockerfile`, confirmed by a rebuild and the health checks |
+| Sat 21 Nov | Review of teammates' code, and the edited `frontend/scripts/index.js` without the mock fallback | `b972bfe`, pull request #4 | The edited script was pasted into the frontend and tested in the browser |
+| Sat 21 Nov | Environment-variable settings in `config/docker-compose.yml`, `config/.env.example` and `config/.gitignore` | `92cfd0f`, pull request #5 | Checked with `docker compose config` and a clean start-up |
+| Sat 21 Nov | Frontend clean-up suggestions (the on-page test table, error display, README text) | `8a02bb3`, pull request #6 | Page reloaded and the four cases repeated in the browser |
+| Sat 21 Nov | Postman collection, README and the three evidence files | `evidence/` and `README.md` | Collection run in Postman against the Docker stack; text checked against the screenshots, logs and commits |
 
-Kaung Nyein Lwin: [FILL tool, purpose, output used, changes, verification and dates, or "no AI used"]
+Kaung Nyein Lwin (tool: Claude, claude.ai chat). The dates follow the commits that contain the work:
+
+| Date | Task | Commits | How it was checked |
+|---|---|---|---|
+| Thu 19 Nov | Drafts of `backend/app/domain/errors.py` (a `DomainError` base class and the codes `INVALID_UNIT_COUNT`, `INVALID_REQUEST`, `EQUIPMENT_NOT_FOUND`, `PLAN_NOT_FOUND`, `DUPLICATE_ITEM`), `domain/scenario.py` (one shared `validate_unit_count` that rejects booleans first and accepts only a whole number from 1 to 15, and `calculate_result` using `Decimal`), `domain/ports.py` (`LoadPlanPort` replacing the starter `CollectionPort`) and the `DomainError` handler in `main.py`. The AI assumed the status mapping (400, 400, 404, 404, 409) because it did not have the errors table, and guessed the port method names | `16f63f1`, `1bcf9b4`, `bc037a8`, `f3eeec7` | The codes and statuses are exercised by the API runs in `testing-debugging-evidence.md`; the method names were aligned with the real `postgres.py` on 21 Nov |
+| Fri 20 Nov | Rewrite of `application/service.py` and `presentation/api.py` (the seven required endpoints, translation of statuses into `DomainError`, a missing `unitCount` returning `INVALID_REQUEST`, the equipment name on each plan item, success codes 201, 200 and 204, removal of the 501 handler). Explanation of why a scratch check stays out of Git, then converting it into `backend/app/tests/test_scenario.py` (13 pytest cases) | `347cf25`, `0a6d1b1`, `1b613c1`, with follow-up edits `4435fb5`, `89fd084`, `e322280`, `fddbec8`, `6f8b446` | Unit tests run with pytest; routes checked with `curl` against the running stack |
+| Fri 20 Nov | Git guidance for a non-fast-forward push rejection (`git pull --rebase origin Backend`) | `5b55a0a` | The push went through after the merge |
+| Sat 21 Nov | Adjusting `LoadPlanAdapter` to the real `postgres.py` (`create_or_get_plan(plan_code, session_code)` returning whether the plan was created, and `get_plan`), making `POST /api/load-plans` return 201 when created and 200 when existing, and guidance for merging the Backend branch by pull request | `68d4f70`, `8489543`, `1de85cc`, `1992c61`, pull request #3 | `curl` evidence cases (totals 15, 19 and 12, and the rejected `unitCount: 0`), then the full API runs in `integration-evidence.md` |
+| Sat 21 Nov | Diagnosing the 404 on `POST /api/load-plans` from the OpenAPI output, which showed only the starter routes, and helping to write issue 5 | none (diagnosis only; the fix is the `api.py` rewrite above) | Issue 5 in `testing-debugging-evidence.md` uses only his real `curl` and OpenAPI output. The AI had predicted a different failure (a 503), which was not used because the real output showed a 404 |
 
 Aung Kyaw Thu Phyo (tool: Gemini, Antigravity Assistant CLI):
 
